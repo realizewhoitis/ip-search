@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Geolocation Aggregator | 911 Research Tool</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/google-libphonenumber/3.2.33/libphonenumber.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- CRITICAL DISCLAIMER BANNER -->
+    <div class="disclaimer-banner">
+        <div class="disclaimer-content">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="warning-icon">
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            <span><strong>WARNING: NOT FOR EMERGENCY DISPATCH.</strong> Identifying ISP infrastructure only. Not a
+                substitute for ANI/ALI.</span>
+        </div>
+    </div>
+
+    <main class="app-container">
+        <header class="app-header">
+            <h1>IP Location Aggregator</h1>
+            <p class="subtitle">Multi-Source Intelligence & Consensus Analysis</p>
+        </header>
+
+        <section class="search-section">
+            <div class="search-mode-toggle">
+                <button id="modeIP" class="toggle-btn active" onclick="switchMode('ip')">IP Address</button>
+                <button id="modeCarrier" class="toggle-btn" onclick="switchMode('carrier')">Carrier Name</button>
+            </div>
+            <div class="search-bar-wrapper">
+                <input type="text" id="ipInput" placeholder="Enter IP Address..." autocomplete="off">
+                <button id="searchBtn">
+                    <span class="search-icon">🔍</span>
+                    <span>Search</span>
+                </button>
+            </div>
+            <div id="errorMsg" class="error-message hidden"></div>
+        </section>
+
+        <section id="loadingState" class="loading-state hidden">
+            <div class="spinner"></div>
+            <p>Querying global databases...</p>
+        </section>
+
+        <section id="resultsSection" class="results-section hidden">
+            <!-- Consensus Badge -->
+            <div id="consensusBadge" class="consensus-badge">
+                <!-- Status injected via JS -->
+            </div>
+
+            <!-- Aggregated Map/Details Area -->
+            <div class="primary-result-card">
+                <h2>Aggregated Location</h2>
+
+                <div id="map" class="map-container"></div>
+
+                <div class="grid-layout">
+                    <div class="info-group">
+                        <label>Estimated City</label>
+                        <span id="aggCity">--</span>
+                    </div>
+                    <div class="info-group">
+                        <label>Region</label>
+                        <span id="aggRegion">--</span>
+                    </div>
+                    <div class="info-group">
+                        <label>County/District</label>
+                        <span id="aggCounty">--</span>
+                    </div>
+                    <div class="info-group">
+                        <label>Country</label>
+                        <span id="aggCountry">--</span>
+                    </div>
+                    <div class="info-group">
+                        <label>ISP / Org</label>
+                        <span id="aggIsp">--</span>
+                    </div>
+                </div>
+
+                <!-- New Contact Section -->
+                <div class="contact-section hidden" id="contactSection">
+                    <h3>Carrier Contact (Exigent/Abuse)</h3>
+                    <div class="grid-layout">
+                        <div class="info-group">
+                            <label>Abuse Email</label>
+                            <span id="abuseEmail" class="selectable">--</span>
+                        </div>
+                        <div class="info-group">
+                            <label>Phone</label>
+                            <span id="abusePhone" class="selectable">--</span>
+                        </div>
+                        <div class="info-group">
+                            <label>Address</label>
+                            <span id="abuseAddress" class="selectable" style="font-size: 0.9rem">--</span>
+                        </div>
+                    </div>
+                    <p class="source-note">Source: Regional Internet Registry (RDAP)</p>
+                </div>
+                <div class="coordinates-display">
+                    <label>Approx. Coordinates</label>
+                    <span id="aggCoords">--</span>
+                    <span class="precision-note" id="precisionNote">(Precision unknown)</span>
+                </div>
+            </div>
+
+            <!-- Individual Source Breakdown -->
+            <div class="sources-grid">
+                <!-- Source 1 -->
+                <div class="source-card">
+                    <div class="source-header">
+                        <span class="source-name">ipinfo.io</span>
+                        <span class="status-dot"></span>
+                    </div>
+                    <div class="source-body" id="source1Body">Waiting...</div>
+                </div>
+                <!-- Source 2 -->
+                <div class="source-card">
+                    <div class="source-header">
+                        <span class="source-name">ip-api.com</span>
+                        <span class="status-dot"></span>
+                    </div>
+                    <div class="source-body" id="source2Body">Waiting...</div>
+                </div>
+                <!-- Source 3 -->
+                <div class="source-card">
+                    <div class="source-header">
+                        <span class="source-name">ipapi.co</span>
+                        <span class="status-dot"></span>
+                    </div>
+                    <div class="source-body" id="source3Body">Waiting...</div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+
+</html>
