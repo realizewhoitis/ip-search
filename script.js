@@ -1,13 +1,12 @@
 const CONFIG = {
     apis: {
         source1: 'https://ipinfo.io/',
-        source2: 'http://ip-api.com/json/',
-        source3: 'https://ipapi.co/',
+        source2: 'http://ip-api.com/json/', // Back to ip-api, HTTP needed for free tier
+        source3: 'https://ipapi.co/jsonp/', // ipapi.co supports JSONP on HTTPS
         rdap: 'https://rdap.arin.net/registry/ip/'
     }
 };
 
-// Internal Directory of Verified Carrier Contacts
 const CARRIER_DIRECTORY = [
     {
         name: 'Google LLC',
@@ -17,39 +16,124 @@ const CARRIER_DIRECTORY = [
         address: '1600 Amphitheatre Parkway, Mountain View, CA'
     },
     {
-        name: 'Comcast Cable / Xfinity',
+        name: 'Comcast / Xfinity',
         keywords: ['comcast', 'xfinity', 'nbc'],
         email: 'abuse@comcast.net',
-        phone: '+1-888-565-4329',
+        phone: '+1-888-565-4329 (LE Support)',
         address: '1800 Bishops Gate Blvd, Mount Laurel, NJ'
     },
     {
-        name: 'Level 3 / Lumen',
-        keywords: ['level3', 'level 3', 'lumen', 'centurylink'],
+        name: 'Charter / Spectrum',
+        keywords: ['charter', 'spectrum', 'time warner'],
+        email: 'leroc@charter.com',
+        phone: '833-277-7762 (Exigent)',
+        address: '400 Washington Blvd, Stamford, CT 06902'
+    },
+    {
+        name: 'Cox Communications',
+        keywords: ['cox', 'cox cable'],
+        email: 'SubpoenaResponse@cox.com',
+        phone: '678-645-4853 (Nat. Security)',
+        address: '6205-B Peachtree Dunwoody Rd, Atlanta, GA'
+    },
+    {
+        name: 'Altice / Optimum (via Yaana)',
+        keywords: ['altice', 'optimum', 'suddenlink', 'cablevision'],
+        email: 'emergency@netd-ttp.com',
+        phone: '800-291-2491 (Exigent 24/7)',
+        address: '1525 McCarthy Blvd, Milpitas, CA (Yaana Tech)'
+    },
+    {
+        name: 'Frontier Communications',
+        keywords: ['frontier', 'frontiernet'],
+        email: 'LawEnforcement@frontier.com',
+        phone: '1-866-351-8483 (Emergency)',
+        address: 'P.O. Box 1003, Everett, WA 98201'
+    },
+    {
+        name: 'Lumen / Level 3 / CenturyLink',
+        keywords: ['level3', 'level 3', 'lumen', 'centurylink', 'qwest'],
         email: 'abuse@level3.com',
         phone: '+1-877-453-8353',
         address: '1025 Eldorado Blvd, Broomfield, CO'
     },
     {
-        name: 'Verizon Business',
-        keywords: ['verizon', 'mci', 'uunet'],
+        name: 'Windstream (Kinetic)',
+        keywords: ['windstream', 'kinetic'],
+        email: 'LEA@windstream.com',
+        phone: '501-748-7364 (Exigent)',
+        address: '4005 Rodney Parham Rd, Little Rock, AR'
+    },
+    {
+        name: 'Mediacom',
+        keywords: ['mediacom'],
+        email: 'nocupdate@mediacomcc.com',
+        phone: '1-800-308-6715 (Exigent)',
+        address: '1 Mediacom Way, Mediacom Park, NY 10918'
+    },
+    {
+        name: 'Verizon / MCI',
+        keywords: ['verizon', 'mci', 'uunet', 'fios'],
         email: 'abuse@verizon.com',
-        phone: '+1-800-444-1111',
-        address: '22001 Loudoun County Pkwy, Ashburn, VA'
+        phone: '+1-800-444-1111 (Security)',
+        address: '180 Washington Valley Rd, Bedminster, NJ'
     },
     {
         name: 'AT&T Services',
-        keywords: ['at&t', 'sbc', 'bellsouth'],
+        keywords: ['at&t', 'sbc', 'bellsouth', 'u-verse'],
         email: 'abuse@att.net',
         phone: '+1-800-337-5373',
         address: '208 S. Akard St, Dallas, TX'
     },
     {
         name: 'T-Mobile USA',
-        keywords: ['t-mobile', 'tmobile', 'sprint'],
+        keywords: ['t-mobile', 'tmobile', 'sprint', 'metro'],
         email: 'abuse@t-mobile.com',
-        phone: '+1-877-746-0909',
+        phone: '+1-973-292-8911 (Exigent)',
         address: '12920 SE 38th St, Bellevue, WA'
+    },
+    {
+        name: 'Starlink / SpaceX',
+        keywords: ['starlink', 'spacex'],
+        email: 'privacy@spacex.com (General)',
+        phone: 'Portal Only (See Terms)',
+        address: '1 Rocket Rd, Hawthorne, CA'
+    },
+    // --- VOIP / APPS ---
+    {
+        name: 'TextNow',
+        keywords: ['textnow', 'text now'],
+        email: 'lawenforcement@textnow.com',
+        phone: 'Portal Only (EMERGENCY DISCLOSURE)',
+        address: '420 Wes Graham Way, Waterloo, ON, Canada'
+    },
+    {
+        name: 'WhatsApp (Meta)',
+        keywords: ['whatsapp', 'whats app', 'meta'],
+        email: 'records@facebook.com (Emergency)',
+        phone: 'Portal: facebook.com/records',
+        address: '1 Hacker Way, Menlo Park, CA'
+    },
+    {
+        name: 'Snapchat',
+        keywords: ['snapchat', 'snap'],
+        email: 'lawenforcement@snapchat.com',
+        phone: '310-684-3062 (Exigent)',
+        address: '2772 Donald Douglas Loop N, Santa Monica, CA'
+    },
+    {
+        name: 'Instagram (Meta)',
+        keywords: ['instagram', 'ig', 'meta'],
+        email: 'lawenforcement@instagram.com',
+        phone: 'Portal: facebook.com/records',
+        address: '1 Hacker Way, Menlo Park, CA'
+    },
+    {
+        name: 'Pinger / TextFree / Sideline',
+        keywords: ['pinger', 'textfree', 'sideline', 'text free'],
+        email: 'legal@pinger.com',
+        phone: 'Portal / Email Only (No Exigent Phone)',
+        address: '97 South 2nd St, San Jose, CA'
     }
 ];
 
@@ -67,6 +151,13 @@ const UI = {
     aggCoords: document.getElementById('aggCoords'),
     aggCounty: document.getElementById('aggCounty'),
 
+    // External Links
+    externalLinks: document.getElementById('externalLinks'),
+    linkDNS: document.getElementById('linkDNS'),
+    linkVT: document.getElementById('linkVT'),
+    linkShodan: document.getElementById('linkShodan'),
+    linkAbuse: document.getElementById('linkAbuse'),
+
     // Contact Info
     contactSection: document.getElementById('contactSection'),
     abuseEmail: document.getElementById('abuseEmail'),
@@ -82,7 +173,7 @@ const UI = {
     btnCarrier: document.getElementById('modeCarrier')
 };
 
-let currentMode = 'ip'; // 'ip' or 'carrier'
+let currentMode = 'ip';
 let map = null;
 let marker = null;
 let accuracyCircle = null;
@@ -132,46 +223,37 @@ async function handleSearch() {
         }
         await searchIP(term);
     } else {
-        searchCarrier(term); // Synchronous lookup
+        searchCarrier(term);
         showLoading(false);
     }
 }
 
-// Carrier Search Logic
 function searchCarrier(term) {
     const query = term.toLowerCase();
 
-    // Find matching carriers by name or keyword
     const matches = CARRIER_DIRECTORY.filter(c =>
         c.name.toLowerCase().includes(query) ||
         c.keywords.some(k => k.includes(query))
     );
 
     if (matches.length === 0) {
-        showError(`No verified contacts found for "${term}". Try "Google", "Comcast", or "Level3".`);
+        showError(`No verified contacts found for "${term}". Try "Google", "Comcast", or "TextNow".`);
         return;
     }
 
-    // Render results (using the existing contact section structure)
-    // We'll hide the map/agg section and just show the contact card/list
-
-    // For now, if multiple matches, just show the first one or create a list
-    // Let's re-purpose the results section effectively
-
     UI.results.classList.remove('hidden');
-    UI.consensus.classList.add('hidden'); // No consensus needed
+    UI.consensus.classList.add('hidden');
+    UI.externalLinks.classList.add('hidden'); // Hide external links for carrier search only
     document.querySelector('.primary-result-card h2').textContent = "Carrier Directory Match";
 
-    // Hide IP specific fields
     UI.aggCity.parentElement.style.display = 'none';
     UI.aggRegion.parentElement.style.display = 'none';
     UI.aggCountry.parentElement.style.display = 'none';
     UI.aggIsp.parentElement.style.display = 'none';
     UI.aggCounty.parentElement.style.display = 'none';
     document.querySelector('.map-container').style.display = 'none';
-    document.querySelector('.sources-grid').style.display = 'none'; // Hide individual sources
+    document.querySelector('.sources-grid').style.display = 'none';
 
-    // Show the first match details in the Contact Section
     const match = matches[0];
     UI.contactSection.classList.remove('hidden');
     document.querySelector('#contactSection h3').textContent = match.name;
@@ -179,7 +261,6 @@ function searchCarrier(term) {
     UI.abusePhone.textContent = match.phone;
     UI.abuseAddress.textContent = match.address;
 
-    // Show note if multiple matches
     if (matches.length > 1) {
         document.querySelector('.source-note').textContent = `Found ${matches.length} matches. Showing top result.`;
     } else {
@@ -188,7 +269,6 @@ function searchCarrier(term) {
 }
 
 async function searchIP(ip) {
-    // Restore IP UI elements
     UI.consensus.classList.remove('hidden');
     document.querySelector('.primary-result-card h2').textContent = "Aggregated Location";
     UI.aggCity.parentElement.style.display = 'flex';
@@ -200,6 +280,13 @@ async function searchIP(ip) {
     document.querySelector('.sources-grid').style.display = 'grid';
     document.querySelector('#contactSection h3').textContent = "Carrier Contact (Exigent/Abuse)";
     document.querySelector('.source-note').textContent = "Source: Regional Internet Registry (RDAP)";
+
+    // Update External Links
+    UI.externalLinks.classList.remove('hidden');
+    UI.linkDNS.href = `https://dnschecker.org/ip-location.php?ip=${ip}`;
+    UI.linkVT.href = `https://www.virustotal.com/gui/ip-address/${ip}`;
+    UI.linkShodan.href = `https://www.shodan.io/host/${ip}`;
+    UI.linkAbuse.href = `https://www.abuseipdb.com/check/${ip}`;
 
     try {
         const results = await Promise.allSettled([
@@ -263,6 +350,7 @@ function resetUI() {
     UI.errorMsg.classList.add('hidden');
     UI.results.classList.add('hidden');
     UI.contactSection.classList.add('hidden');
+    UI.externalLinks.classList.add('hidden');
 }
 
 function showLoading(show) {
@@ -279,7 +367,7 @@ function showError(msg) {
 }
 
 // JSONP Helper
-function fetchJSONP(url, callbackParam = 'callback') {
+function fetchJSONP(url, callbackParam = 'callback', ipForIpapi = null) {
     return new Promise((resolve, reject) => {
         const callbackName = 'jsonp_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
         const timeout = setTimeout(() => {
@@ -299,8 +387,16 @@ function fetchJSONP(url, callbackParam = 'callback') {
         };
 
         const script = document.createElement('script');
-        const separator = url.includes('?') ? '&' : '?';
-        script.src = `${url}${separator}${callbackParam}=${callbackName}`;
+        let src = url;
+
+        // Special handling for ipapi.co structure: https://ipapi.co/{ip}/jsonp/
+        if (url.includes('ipapi.co') && ipForIpapi) {
+            src = `https://ipapi.co/${ipForIpapi}/jsonp/`;
+        }
+
+        const separator = src.includes('?') ? '&' : '?';
+        script.src = `${src}${separator}${callbackParam}=${callbackName}`;
+
         script.onerror = () => {
             cleanup();
             reject(new Error('JSONP request failed'));
@@ -315,11 +411,15 @@ async function fetchSource1(ip) {
 }
 
 async function fetchSource2(ip) {
+    // ip-api.com (HTTP, JSONP)
+    // Note: This relies on the browser allowing mixed content or running from file://
     return fetchJSONP(`${CONFIG.apis.source2}${ip}?fields=status,message,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,isp,org,as`, 'callback');
 }
 
 async function fetchSource3(ip) {
-    return fetchJSONP(`${CONFIG.apis.source3}${ip}/jsonp`, 'callback');
+    // ipapi.co (HTTPS, JSONP)
+    // endpoint: https://ipapi.co/{ip}/jsonp/
+    return fetchJSONP(`${CONFIG.apis.source3}`, 'callback', ip);
 }
 
 async function fetchRDAP(ip) {
@@ -385,28 +485,28 @@ function aggregateResults(data) {
         });
     }
 
-    if (data.s2 && data.s2.status !== 'fail') {
+    if (data.s2 && data.s2.success !== false) { // ipwhois.app
         sources.push({
-            source: 'ip-api.com',
+            source: 'ipwhois.app',
             city: data.s2.city,
-            region: data.s2.regionName,
+            region: data.s2.region,
             country: data.s2.country,
-            lat: data.s2.lat,
-            lon: data.s2.lon,
-            isp: data.s2.org || data.s2.isp || '--',
-            county: data.s2.district || '--'
+            lat: parseFloat(data.s2.latitude),
+            lon: parseFloat(data.s2.longitude),
+            isp: data.s2.isp || data.s2.org || '--',
+            county: '--'
         });
     }
 
-    if (data.s3 && !data.s3.error) {
+    if (data.s3 && data.s3.geoplugin_status === 200) { // geoplugin.net
         sources.push({
-            source: 'ipapi.co',
-            city: data.s3.city,
-            region: data.s3.region,
-            country: data.s3.country_name,
-            lat: data.s3.latitude,
-            lon: data.s3.longitude,
-            isp: data.s3.org || '--',
+            source: 'geoplugin.net',
+            city: data.s3.geoplugin_city,
+            region: data.s3.geoplugin_region,
+            country: data.s3.geoplugin_countryName,
+            lat: parseFloat(data.s3.geoplugin_latitude),
+            lon: parseFloat(data.s3.geoplugin_longitude),
+            isp: '--', // geoplugin free doesn't provide ISP
             county: '--'
         });
     }
@@ -461,7 +561,7 @@ function renderResults(agg, rawData) {
 }
 
 function renderSourceCard(el, data, title) {
-    if (!data || data.status === 'fail' || data.error) {
+    if (!data || data.status === 'fail' || data.error || data.success === false) {
         el.innerHTML = '<span style="color:var(--danger)">Failed to fetch/parse</span>';
         return;
     }

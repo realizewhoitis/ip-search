@@ -166,7 +166,6 @@ button#searchBtn:hover {
     display: none !important;
 }
 
-/* Styles from previous steps match here, truncated for brevity unless new */
 /* Loading */
 .loading-state {
     text-align: center;
@@ -251,6 +250,49 @@ button#searchBtn:hover {
 .info-group span {
     font-size: 1.1rem;
     font-weight: 500;
+}
+
+/* External Links */
+.external-links {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+
+.external-links h3 {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.link-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+.ext-link-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.ext-link-btn:hover {
+    background: rgba(59, 130, 246, 0.2);
+    border-color: var(--accent);
+    transform: translateY(-2px);
 }
 
 /* Contact Section Styling */
